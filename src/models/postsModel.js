@@ -1,14 +1,40 @@
-const arrayListAutores = [
-    {id: 1, autor: "CONSTANCE", descriacao: "Livro java desing patterns"},
-    {id: 2, autor: "CTC", descriacao: "Livro java desing patterns"},
-    {id: 3, autor: "FRANSING", descriacao: "Livro java desing patterns"}
-];
+import { ObjectId } from "mongodb";
+import conectarBd from "../config/configBd.js";
+
+
+const DB_NAME = "IMERSAODB";
+const COLLECTION_NAME = "posts";
+
+async function getBanco(){
+    const conn = await conectarBd();
+    const banco = conn.db(DB_NAME);
+    return banco;
+
+}
 
 export async function buscarTodosPosts(){
-    return arrayListAutores;
+    const banco = await getBanco();
+
+    const collections = banco.collection(COLLECTION_NAME);
+
+    return collections.find().toArray();
 }
 
 export async function buscarPorIdPosts(id){
-    const autor = arrayListAutores.find(obj => obj.id === Number(id))
-    return autor
+    const objID = new ObjectId(id);
+    const findOne = {_id: objID};
+
+    const banco = await getBanco();
+
+    const findId = await banco.collection(COLLECTION_NAME).findOne(findOne);
+
+    return findId;
+}
+
+export async function savePost(body){
+
+    const banco = await getBanco();
+    const collection = await banco.collection(COLLECTION_NAME);
+
+    return collection.insertOne(body);
 }

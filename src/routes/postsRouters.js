@@ -1,5 +1,5 @@
 import express from "express"
-import { getAllPost, getByIdPosts } from "../controllers/postsController.js";
+import { getAllPost, getByIdPosts, createPost } from "../controllers/postsController.js";
 
 const routers = (app) => {
     app.use(express.json());
@@ -7,6 +7,8 @@ const routers = (app) => {
     app.get("/posts", getAllPost);
         
     app.get("/posts/:id", getByIdPosts);
+
+    app.post("/posts", createPost);
 }
 
 export default routers;
