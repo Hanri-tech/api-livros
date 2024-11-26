@@ -1,4 +1,4 @@
-import {buscarTodosPosts, buscarPorIdPosts, savePost} from "../models/postsModel.js"
+import {buscarTodosPosts, buscarPorIdPosts, savePost, updateOnePost} from "../models/postsModel.js"
 import fs from "fs";
 import path from "path";
 
@@ -39,6 +39,19 @@ export async function uploadImg(req, res) {
         const newPathImg = `uploads/${response.insertedId}.${path.extname(req.file.originalname)}`
         fs.renameSync(req.file.path, newPathImg)
         console.log(req.file);
+        res.status(201).json(response);
+    }catch(exceptions){
+        console.log(`[LOG-ERROR] - Erro ao tentar inserir registro no banco de dados... STACKTRACE: ${exceptions}`);
+        res.status(500).json({error: "Falha Interna ao inserir registro no banco de dados..."})
+    }
+
+}
+
+
+export async function updatePost(req, res) {
+    try{
+        const response = await updateOnePost(req.params.id, req.body);
+        
         res.status(201).json(response);
     }catch(exceptions){
         console.log(`[LOG-ERROR] - Erro ao tentar inserir registro no banco de dados... STACKTRACE: ${exceptions}`);

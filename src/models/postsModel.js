@@ -38,3 +38,20 @@ export async function savePost(body){
 
     return collection.insertOne(body);
 }
+
+export async function updateOnePost(id, body){
+    const objId = new ObjectId(id);
+    const whereId = {_id: objId};
+
+    const banco = await getBanco();
+    const findId = await banco.collection(COLLECTION_NAME).findOne(whereId);
+    const reqBody = {
+        descricao: body.descricao,
+        imgUrl: `uploads/${id}.${path.extname(findId.imgUrl)}`,
+        alt: body.alt
+    }
+
+   // const objHexId = ObjectId.createFromHexString(id);
+   // return banco.collection(COLLECTION_NAME).updateOne({_id: new ObjectId(objHexId)}, {$set:reqBody});
+
+}
